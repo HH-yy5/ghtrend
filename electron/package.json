@@ -68,7 +68,7 @@
       "deleteAppDataOnUninstall": false
     },
     "portable": {
-      "artifactName": "GHTrend-${version}-便携版.${ext}"
+      "artifactName": "GHTrend-${version}-portable-${arch}.${ext}"
     }
   }
 }

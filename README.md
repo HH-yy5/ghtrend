@@ -58,7 +58,12 @@ GHTrend 做三件官网不做的事：
 
 ### 方式一：下载桌面版（推荐，无需 Python / Node）
 
-到 [Releases](../../releases/latest) 下载 `GHTrend-x.x.x-x64.zip`，解压后双击 `GHTrend.exe`。
+到 [Releases](../../releases/latest) 下载：
+
+| 文件 | 说明 |
+|---|---|
+| `GHTrend-x.x.x-x64.exe` | 安装版，可选安装目录，自动建桌面和开始菜单快捷方式 |
+| `GHTrend-x.x.x-portable-x64.exe` | 免安装版，双击即用，适合放 U 盘或不愿写注册表 |
 
 > 未做代码签名，首次运行 Windows SmartScreen 会提示「已保护你的电脑」→ 点「更多信息」→「仍要运行」。
 > 国内杀软也可能误报 Electron 打包程序，加入信任即可。
