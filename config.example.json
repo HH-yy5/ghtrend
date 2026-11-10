@@ -1,0 +1,57 @@
+{
+  "github": {
+    "token": "",
+    "api_base": "",
+    "proxy": "",
+    "timeout": 60,
+    "extra_endpoints": [],
+    "core_min_stars": 500,
+    "core_pages": 3,
+    "push_window_days": 30,
+    "new_min_stars": 100,
+    "new_pages": 2,
+    "created_window_days": 60
+  },
+  "report": {
+    "top_n": 20,
+    "language": "",
+    "min_delta": 0
+  },
+  "web": {
+    "link_modes": [
+      {
+        "id": "direct",
+        "label": "github.com 官方",
+        "template": "{url}"
+      },
+      {
+        "id": "ghproxy",
+        "label": "gh-proxy 加速（直连打不开时选）",
+        "template": "https://gh-proxy.com/{url}"
+      }
+    ],
+    "default_link_mode": "direct"
+  },
+  "llm": {
+    "enabled": false,
+    "base_url": "https://api.openai.com/v1",
+    "api_key": "",
+    "model": "gpt-4o-mini",
+    "timeout": 40,
+    "max_calls_per_run": 30,
+    "concurrency": 4
+  },
+  "notify": {
+    "wecom_webhook": "",
+    "email": {
+      "enabled": false,
+      "host": "smtp.qq.com",
+      "port": 465,
+      "use_ssl": true,
+      "user": "",
+      "password": "",
+      "to": ""
+    }
+  },
+  "retention_days": 90
+}

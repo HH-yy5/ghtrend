@@ -1,0 +1,52 @@
+name: build
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install PyInstaller
+        run: python -m pip install --upgrade pip pyinstaller
+
+      - name: Build Python backend
+        run: |
+          python tools/make_icon.py
+          python -m PyInstaller --noconfirm --clean --name ghtrend-server --onedir --noconsole --icon electron/build/icon.ico --add-data "web;web" --distpath backend-dist --workpath build/pyinstaller --specpath build server.py
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Electron deps
+        working-directory: electron
+        run: npm ci
+
+      - name: Package desktop app
+        working-directory: electron
+        run: npm run dist
+
+      - name: Upload portable zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: GHTrend-windows-x64
+          path: dist/*.zip
+          if-no-files-found: warn
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.exe
+            dist/*.zip
+          generate_release_notes: true

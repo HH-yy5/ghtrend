@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GHTrend · GitHub 星速榜</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">★</div>
+    <div class="brand-text">
+      <h1>GitHub 星速榜</h1>
+      <p id="metaLine">正在连接本地服务…</p>
+    </div>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab is-active" type="button" data-view="board" role="tab">今日榜单</button>
+    <button class="tab" type="button" data-view="library" role="tab">我的收藏<span class="tab-n" id="libCount" hidden>0</span></button>
+  </nav>
+
+  <div class="topbar-actions">
+    <span class="live" id="liveChip" data-state="connecting">
+      <i></i><span id="liveText">连接中</span>
+    </span>
+    <button class="btn ghost" id="btnQuit" title="关闭本地服务并退出">退出</button>
+    <button class="btn primary" id="btnRefresh">抓取最新数据</button>
+  </div>
+</header>
+
+<div id="viewBoard">
+  <section class="stats" id="stats">
+    <div class="stat skeleton"></div>
+    <div class="stat skeleton"></div>
+    <div class="stat skeleton"></div>
+    <div class="stat skeleton"></div>
+  </section>
+
+  <section class="toolbar">
+    <div class="field">
+      <label for="selLang">语言</label>
+      <select id="selLang"><option value="">全部语言</option></select>
+    </div>
+    <div class="field">
+      <label for="selTop">展示</label>
+      <select id="selTop">
+        <option value="10">Top 10</option>
+        <option value="20" selected>Top 20</option>
+        <option value="30">Top 30</option>
+        <option value="50">Top 50</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="inpDelta">最小增量</label>
+      <input id="inpDelta" type="number" min="0" step="10" placeholder="0">
+    </div>
+    <div class="field" id="linkField" hidden>
+      <label for="selLink">打开项目</label>
+      <select id="selLink"></select>
+    </div>
+    <div class="toolbar-right">
+      <span class="chip" id="modeChip" hidden></span>
+      <span class="chip muted" id="apiChip" hidden></span>
+      <span class="chip" id="sumChip" hidden></span>
+      <span class="chip muted" id="timeChip"></span>
+    </div>
+  </section>
+
+  <div class="progress" id="progress" hidden>
+    <div class="progress-head">
+      <span class="dot"></span>
+      <span id="progText">准备中…</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+    <p class="progress-hint">抓取期间可以继续看当前榜单，完成后会自动刷新</p>
+  </div>
+
+  <main id="board" aria-live="polite"></main>
+</div>
+
+<div id="viewLibrary" hidden>
+  <section class="toolbar">
+    <div class="field grow">
+      <label for="inpSearch">搜索收藏</label>
+      <input id="inpSearch" type="search" placeholder="项目名、标题、备注都能搜" autocomplete="off">
+    </div>
+    <div class="toolbar-right">
+      <span class="chip muted" id="libChip">收藏不会因为掉榜而消失</span>
+    </div>
+  </section>
+
+  <main id="libList" aria-live="polite"></main>
+</div>
+
+<footer class="foot">
+  <span>数据来源 GitHub Search API ｜ 全部在你的电脑上运行，不上传任何数据</span>
+  <span id="footMeta"></span>
+</footer>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="/app.js"></script>
+</body>
+</html>

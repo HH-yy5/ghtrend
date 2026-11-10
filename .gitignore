@@ -1,0 +1,45 @@
+# ===== 密钥与个人配置：绝不提交 =====
+config.json
+*.local.json
+
+# ===== 本地数据：可随时重建 =====
+data/
+logs/
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# ===== Electron / 打包产物 =====
+electron/node_modules/
+dist/
+build/
+out/
+release/
+release2/
+backend-dist/
+backend-new/
+backend-v2/
+backend-link/
+backend_old/
+backend_prev2/
+backend_prev3/
+
+# ===== 二进制 / 大文件 =====
+*.exe
+*.dll
+*.pak
+*.asar
+*.zip
+*.7z
+
+# ===== 系统与编辑器 =====
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
