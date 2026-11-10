@@ -14,14 +14,7 @@ GHTrend 做三件官网不做的事：
 
 数据全部在你自己的电脑上，不上传任何一个字节。
 
-<!-- TODO: 上传截图后取消下面三行注释
 ![GHTrend 榜单界面](docs/images/board.png)
-![收藏后涨幅](docs/images/library.png)
-![15 秒演示](docs/images/demo.gif)
--->
-
-> **截图待上传**：`docs/images/board.png`（榜单）· `docs/images/library.png`（收藏涨幅）· `docs/images/demo.gif`（15 秒演示：收藏 → 七天后 → +3,247 star）
-> 上传后删掉本段、取消上方注释。
 
 ---
 
@@ -51,6 +44,10 @@ GHTrend 做三件官网不做的事：
 - **断点续抓**：分页结果本地缓存，网络断了下次接着抓
 - **实时进度**：SSE 推送，抓取期间可以继续看旧榜单
 - **可选推送**：企业微信 Webhook / SMTP 邮件日报
+
+收藏页记着每个项目的「收藏时 star / 当前 star / 收藏后涨幅」，掉出榜单也不会消失：
+
+![收藏后涨幅](docs/images/library.png)
 
 ---
 
