@@ -22,24 +22,52 @@ jobs:
           python --version
 
       # 注意：--specpath 会让 --icon / --add-data 的相对路径按 spec 目录解析，
-      # 因此这里一律传绝对路径（$ROOT）。
+      # 因此这里一律传绝对路径（$ROOT）。失败时把日志写进 step summary，便于排查。
       - name: Build Python backend
         shell: bash
         run: |
-          set -euo pipefail
+          set -uo pipefail
           ROOT="$(pwd -W 2>/dev/null || pwd)"
           echo "ROOT=$ROOT"
-          python tools/make_icon.py
+
+          if ! python tools/make_icon.py > icon.log 2>&1; then
+            {
+              echo "### ❌ make_icon.py failed"
+              echo '```'
+              cat icon.log
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
           ls -l "$ROOT/electron/build/icon.ico"
-          python -m PyInstaller --noconfirm --clean --log-level WARN \
+
+          if ! python -m PyInstaller --noconfirm --clean \
             --name ghtrend-server --onedir --noconsole \
             --icon "$ROOT/electron/build/icon.ico" \
             --add-data "$ROOT/web;web" \
             --distpath "$ROOT/backend-dist" \
             --workpath "$ROOT/build/pyinstaller" \
             --specpath "$ROOT/build" \
-            "$ROOT/server.py"
-          test -f "$ROOT/backend-dist/ghtrend-server/ghtrend-server.exe"
+            "$ROOT/server.py" > pyi.log 2>&1; then
+            {
+              echo "### ❌ PyInstaller failed"
+              echo '```'
+              tail -80 pyi.log
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          if [ ! -f "$ROOT/backend-dist/ghtrend-server/ghtrend-server.exe" ]; then
+            {
+              echo "### ❌ executable missing"
+              echo '```'
+              find "$ROOT/backend-dist" -maxdepth 2 | head -40
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          echo "backend ok"
 
       - uses: actions/setup-node@v4
         with:
