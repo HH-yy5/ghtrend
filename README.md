@@ -68,7 +68,7 @@ GHTrend 做三件官网不做的事：
 ### 方式二：从源码跑（零第三方依赖）
 
 ```bash
-git clone https://github.com/<your-name>/ghtrend.git
+git clone https://github.com/HH-yy5/ghtrend.git
 cd ghtrend
 
 python ghtrend.py demo     # 零配置、不联网，先看看长什么样
