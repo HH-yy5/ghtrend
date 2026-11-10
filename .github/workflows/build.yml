@@ -8,6 +8,10 @@ on:
 jobs:
   windows:
     runs-on: windows-latest
+    env:
+      # 构建机默认 cp1252 控制台，中文/emoji 输出会 UnicodeEncodeError
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: "utf-8"
     steps:
       - uses: actions/checkout@v4
 
@@ -75,7 +79,13 @@ jobs:
 
       - name: Install Electron deps
         working-directory: electron
-        run: npm ci
+        shell: bash
+        # 仓库里的 .npmrc 指向 npmmirror（给国内用户加速），
+        # GitHub 美国 runner 上访问国内镜像反而慢/超时，这里删掉走官方源。
+        run: |
+          rm -f .npmrc
+          npm ci --no-audit --no-fund
+          npx electron --version
 
       - name: Package desktop app
         working-directory: electron

@@ -17,8 +17,17 @@ from __future__ import annotations
 
 import math
 import struct
+import sys
 import zlib
 from pathlib import Path
+
+# 非中文 Windows（如 CI 的 cp1252 控制台）打印中文会 UnicodeEncodeError 直接崩掉，
+# 这里把标准流切到 UTF-8，无法编码的字符降级为占位符而不是抛异常。
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
 
 OUT_DIR = Path(__file__).resolve().parent.parent / "electron" / "build"
 

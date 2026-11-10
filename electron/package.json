@@ -1,7 +1,7 @@
 {
   "name": "ghtrend",
   "productName": "GHTrend",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "GHTrend · GitHub 星速榜 — 每天看 star 涨得最快的开源项目",
   "main": "main.js",
   "author": "可恶哥",
@@ -34,13 +34,25 @@
       {
         "from": "../backend-dist/ghtrend-server",
         "to": "backend",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "win": {
       "target": [
-        { "target": "nsis", "arch": ["x64"] },
-        { "target": "portable", "arch": ["x64"] }
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
       "icon": "build/icon.ico",
       "artifactName": "GHTrend-${version}-${arch}.${ext}"
