@@ -16,25 +16,30 @@ jobs:
           python-version: "3.13"
 
       - name: Install PyInstaller
-        run: python -m pip install --upgrade pip pyinstaller
-
-      - name: Build Python backend
-        shell: pwsh
         run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyinstaller
+          python --version
+
+      # 注意：--specpath 会让 --icon / --add-data 的相对路径按 spec 目录解析，
+      # 因此这里一律传绝对路径（$ROOT）。
+      - name: Build Python backend
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$(pwd -W 2>/dev/null || pwd)"
+          echo "ROOT=$ROOT"
           python tools/make_icon.py
-          $root = (Get-Location).Path
-          $web  = Join-Path $root "web"
-          $icon = Join-Path $root "electron/build/icon.ico"
-          python -m PyInstaller --noconfirm --clean --name ghtrend-server --onedir --noconsole `
-            --icon "$icon" `
-            --add-data "$web;web" `
-            --distpath "$(Join-Path $root 'backend-dist')" `
-            --workpath "$(Join-Path $root 'build/pyinstaller')" `
-            --specpath "$(Join-Path $root 'build')" `
-            "$(Join-Path $root 'server.py')"
-          if (-not (Test-Path "backend-dist/ghtrend-server/ghtrend-server.exe")) {
-            throw "backend build produced no executable"
-          }
+          ls -l "$ROOT/electron/build/icon.ico"
+          python -m PyInstaller --noconfirm --clean --log-level WARN \
+            --name ghtrend-server --onedir --noconsole \
+            --icon "$ROOT/electron/build/icon.ico" \
+            --add-data "$ROOT/web;web" \
+            --distpath "$ROOT/backend-dist" \
+            --workpath "$ROOT/build/pyinstaller" \
+            --specpath "$ROOT/build" \
+            "$ROOT/server.py"
+          test -f "$ROOT/backend-dist/ghtrend-server/ghtrend-server.exe"
 
       - uses: actions/setup-node@v4
         with:
@@ -46,14 +51,19 @@ jobs:
 
       - name: Package desktop app
         working-directory: electron
-        run: npm run dist
+        run: npm run dist -- --publish never
 
-      - name: Upload portable zip
+      - name: List output
+        run: ls -l dist
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: GHTrend-windows-x64
-          path: dist/*.zip
-          if-no-files-found: warn
+          path: |
+            dist/*.exe
+            dist/*.zip
+          if-no-files-found: error
 
       - name: Attach to release
         if: startsWith(github.ref, 'refs/tags/')
