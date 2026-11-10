@@ -19,9 +19,22 @@ jobs:
         run: python -m pip install --upgrade pip pyinstaller
 
       - name: Build Python backend
+        shell: pwsh
         run: |
           python tools/make_icon.py
-          python -m PyInstaller --noconfirm --clean --name ghtrend-server --onedir --noconsole --icon electron/build/icon.ico --add-data "web;web" --distpath backend-dist --workpath build/pyinstaller --specpath build server.py
+          $root = (Get-Location).Path
+          $web  = Join-Path $root "web"
+          $icon = Join-Path $root "electron/build/icon.ico"
+          python -m PyInstaller --noconfirm --clean --name ghtrend-server --onedir --noconsole `
+            --icon "$icon" `
+            --add-data "$web;web" `
+            --distpath "$(Join-Path $root 'backend-dist')" `
+            --workpath "$(Join-Path $root 'build/pyinstaller')" `
+            --specpath "$(Join-Path $root 'build')" `
+            "$(Join-Path $root 'server.py')"
+          if (-not (Test-Path "backend-dist/ghtrend-server/ghtrend-server.exe")) {
+            throw "backend build produced no executable"
+          }
 
       - uses: actions/setup-node@v4
         with:
